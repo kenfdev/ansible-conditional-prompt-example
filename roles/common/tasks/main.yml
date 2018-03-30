@@ -1,0 +1,17 @@
+- block:
+  - name: Prompt password
+    pause:
+      prompt: Enter the crypted password
+      echo: no
+    register: foo_pass
+  - name: Set password fact
+    set_fact:
+      foo_pass: "{{ foo_pass.user_input }}"
+    run_once: true
+  - name: Configure user
+    user:
+      name: foo
+      password: "{{ vars['foo_pass'] }}"
+      state: present
+    when: vars['foo_pass'] | length > 0
+  when: configure_user
